@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'test'
         CONTAINER_NAME = 'test'
-        PORT = '8081'
+        PORT = '8080' // Keep this 8080 (your app port)
     }
 
     stages {
@@ -15,9 +15,7 @@ pipeline {
         }
 
         stage('Build') {
-            when {
-                branch 'main'
-            }
+            // REMOVED: when { branch 'main' }
             steps {
                 sh 'chmod +x gradlew'
                 sh './gradlew clean build'
@@ -25,31 +23,28 @@ pipeline {
         }
 
         stage('Test') {
-            when {
-                branch 'main'
-            }
+            // REMOVED: when { branch 'main' }
             steps {
                 sh './gradlew test'
             }
         }
 
         stage('Docker Build') {
-            when {
-                branch 'main'
-            }
+            // REMOVED: when { branch 'main' }
             steps {
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
         stage('Deploy') {
-            when {
-                branch 'main'
-            }
+            // REMOVED: when { branch 'main' }
             steps {
                 sh '''
                 docker stop $CONTAINER_NAME || true
                 docker rm $CONTAINER_NAME || true
+
+                # Maps Host Port 8080 -> Container Port 8080
+                # (Safe now because Jenkins is on 9000)
                 docker run -d \
                   --name $CONTAINER_NAME \
                   -p $PORT:8080 \
