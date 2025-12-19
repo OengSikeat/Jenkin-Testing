@@ -52,7 +52,7 @@ pipeline {
                 docker rm $CONTAINER_NAME || true
                 docker run -d \
                   --name $CONTAINER_NAME \
-                  -p $PORT:$PORT \
+                  -p $PORT:8080 \
                   $IMAGE_NAME
                 '''
             }
